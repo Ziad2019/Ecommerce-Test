@@ -1,7 +1,46 @@
-import type { NextConfig } from "next";
+// // next.config.js
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   images: {
+//     remotePatterns: [
+//       {
+//         protocol: "https",
+//         hostname: "lh3.googleusercontent.com",
+//       },
+//       {
+//         protocol: "https",
+//         hostname: "utfs.io",
+//       },
+//       {
+//         protocol: "https",
+//         hostname: "res.cloudinary.com",
+//       },
+//     ],
+//   },
+//   experimental: {
+//     serverActions: {
+//       bodySizeLimit: "5mb",
+//     },
+//   },
+// }
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+// module.exports = nextConfig
 
-export default nextConfig;
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "utfs.io" },
+      { protocol: "https", hostname: "res.cloudinary.com" },
+    ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
+}
+
+module.exports = nextConfig
