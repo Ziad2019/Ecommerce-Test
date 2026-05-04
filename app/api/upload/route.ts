@@ -1,9 +1,7 @@
 // src/app/api/upload/route.ts
 import { NextRequest, NextResponse } from "next/server"
-import { writeFile, mkdir } from "fs/promises"
-import { join } from "path"
 import { auth } from "@/lib/auth"
-import { v4 as uuidv4 } from "uuid"
+import cloudinary from "@/lib/cloudinary"
 
 export async function POST(req: NextRequest) {
   const session = await auth()
@@ -20,7 +18,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+    ]
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json({ error: "Invalid file type" }, { status: 400 })
     }
@@ -30,24 +33,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "File too large" }, { status: 400 })
     }
 
+    // Convert file to base64
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
+    const base64 = `data:${file.type};base64,${buffer.toString("base64")}`
 
-    // Create unique filename
-    const ext = file.name.split(".").pop()
-    const filename = `${uuidv4()}.${ext}`
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(base64, {
+      folder: "ecommerce",
+      transformation: [
+        { width: 800, height: 800, crop: "limit", quality: "auto" },
+      ],
+    })
 
-    // Ensure upload directory exists
-    const uploadDir = join(process.cwd(), "public", "uploads")
-    await mkdir(uploadDir, { recursive: true })
-
-    // Save file
-    const filepath = join(uploadDir, filename)
-    await writeFile(filepath, buffer)
-
-    const url = `/uploads/${filename}`
-
-    return NextResponse.json({ url, filename })
+    return NextResponse.json({
+      url: result.secure_url,
+      publicId: result.public_id,
+    })
   } catch (error) {
     console.error("Upload error:", error)
     return NextResponse.json({ error: "Upload failed" }, { status: 500 })

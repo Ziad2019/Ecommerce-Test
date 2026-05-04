@@ -121,6 +121,7 @@ model Product {
   compareAt   Float?
   costPrice   Float?
   sku         String?       @unique
+  barcode     String?       // ✅ أضف السطر ده
   stock       Int           @default(0)
   lowStock    Int           @default(5)
   weight      Float?
@@ -131,14 +132,14 @@ model Product {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  category  Category         @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
-  images    ProductImage[]
-  variants  ProductVariant[]
+  category   Category         @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
+  images     ProductImage[]
+  variants   ProductVariant[]
   orderItems OrderItem[]
-  reviews   Review[]
-  wishlist  Wishlist[]
-  cartItems CartItem[]
-  tags      Tag[]            @relation(fields: [tagIds], references: [id])
+  reviews    Review[]
+  wishlist   Wishlist[]
+  cartItems  CartItem[]
+  tags       Tag[]            @relation(fields: [tagIds], references: [id])
 }
 
 model ProductImage {
