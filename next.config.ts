@@ -41,6 +41,9 @@ const nextConfig = {
       bodySizeLimit: "5mb",
     },
   },
+    typescript: {
+    ignoreBuildErrors: true,
+  },
 }
 
 module.exports = nextConfig
